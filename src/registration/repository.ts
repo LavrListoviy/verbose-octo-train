@@ -17,7 +17,17 @@ import { validateRequiredProfile } from "./validation.js";
 type DraftUpdate = Partial<
   Pick<
     RegistrationDraft,
-    "step" | "displayName" | "birthDate" | "avatarFileId" | "bio" | "city" | "country"
+    | "step"
+    | "displayName"
+    | "birthDate"
+    | "avatarFileId"
+    | "bio"
+    | "city"
+    | "cityOsmType"
+    | "cityOsmId"
+    | "country"
+    | "countryCode"
+    | "locationCandidates"
   >
 >;
 
@@ -151,7 +161,10 @@ export class RegistrationRepository {
           avatarFileId: draft.avatarFileId,
           bio: draft.bio,
           city: draft.city,
+          cityOsmType: draft.cityOsmType,
+          cityOsmId: draft.cityOsmId,
           country: draft.country,
+          countryCode: draft.countryCode,
           status: "active",
           registeredAt: new Date(),
         })
@@ -164,7 +177,10 @@ export class RegistrationRepository {
             avatarFileId: draft.avatarFileId,
             bio: draft.bio,
             city: draft.city,
+            cityOsmType: draft.cityOsmType,
+            cityOsmId: draft.cityOsmId,
             country: draft.country,
+            countryCode: draft.countryCode,
             status: "active",
             registeredAt: new Date(),
             updatedAt: new Date(),
@@ -199,7 +215,10 @@ export class RegistrationRepository {
             avatarFileId: draft.avatarFileId,
             bio: draft.bio,
             city: draft.city,
+            cityOsmType: draft.cityOsmType,
+            cityOsmId: draft.cityOsmId,
             country: draft.country,
+            countryCode: draft.countryCode,
             status: "active",
           },
         }),
@@ -219,7 +238,11 @@ function draftSnapshot(draft: RegistrationDraft): Record<string, unknown> {
     avatarFileId: draft.avatarFileId,
     bio: draft.bio,
     city: draft.city,
+    cityOsmType: draft.cityOsmType,
+    cityOsmId: draft.cityOsmId,
     country: draft.country,
+    countryCode: draft.countryCode,
+    locationCandidates: draft.locationCandidates,
   };
 }
 
@@ -233,7 +256,10 @@ function userSnapshot(user: typeof users.$inferSelect): Record<string, unknown> 
     avatarFileId: user.avatarFileId,
     bio: user.bio,
     city: user.city,
+    cityOsmType: user.cityOsmType,
+    cityOsmId: user.cityOsmId,
     country: user.country,
+    countryCode: user.countryCode,
     status: user.status,
   };
 }

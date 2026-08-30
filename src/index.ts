@@ -6,13 +6,18 @@ import { loadConfig } from "./config.js";
 import { createDatabase } from "./db/client.js";
 import { createLogger } from "./observability/logger.js";
 import { RegistrationRepository } from "./registration/repository.js";
+import { NominatimGeocoder } from "./registration/geocoder.js";
 
 const config = loadConfig();
 const logger = createLogger(config);
 const { db, close } = createDatabase(config.DATABASE_URL);
+const geocoder = new NominatimGeocoder({
+  baseUrl: config.NOMINATIM_BASE_URL,
+  userAgent: "telegram-account-bot/0.1 (+https://github.com/LavrListoviy/verbose-octo-train)",
+});
 const audit = new AuditService(db, logger);
 const retention = new AuditRetentionWorker(audit, config.AUDIT_RETENTION_YEARS, logger);
-const bot = createBot(config.BOT_TOKEN, new RegistrationRepository(db, logger), audit, logger);
+const bot = createBot(config.BOT_TOKEN, new RegistrationRepository(db, logger), audit, logger, geocoder);
 let shuttingDown = false;
 
 const shutdown = async (reason: string, error?: unknown) => {

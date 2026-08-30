@@ -145,8 +145,11 @@ describe("registration transactions", () => {
         draft = await repository.update(telegramId, {
           birthDate: "2000-01-02",
           bio: "Database-backed profile",
-          city: "Moscow",
-          country: "Russia",
+          city: "Москва",
+          cityOsmType: "relation",
+          cityOsmId: "2555133",
+          country: "Россия",
+          countryCode: "RU",
           step: "confirmation",
         });
         await repository.complete({ id: telegramId, username: "integration_user" }, draft);
@@ -157,6 +160,11 @@ describe("registration transactions", () => {
     expect(user).toMatchObject({
       displayName: "Integration User",
       birthDate: "2000-01-02",
+      city: "Москва",
+      cityOsmType: "relation",
+      cityOsmId: "2555133",
+      country: "Россия",
+      countryCode: "RU",
       status: "active",
     });
 
