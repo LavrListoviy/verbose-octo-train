@@ -12,6 +12,7 @@ describe("application logger", () => {
       DATABASE_URL: "postgres://bot:super-secret-password@db:5432/bot",
       ADMIN_TELEGRAM_ID: 120484366n,
       AUDIT_RETENTION_YEARS: 3,
+      NOMINATIM_BASE_URL: "https://nominatim.openstreetmap.org/",
       LOG_LEVEL: "debug",
       LOG_PRETTY: false,
     };

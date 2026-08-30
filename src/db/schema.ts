@@ -13,14 +13,16 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
+import type { GeographicCandidate } from "../registration/geocoder.js";
+
 export const accountStatusEnum = pgEnum("account_status", ["pending", "active"]);
 export const registrationStepEnum = pgEnum("registration_step", [
   "display_name",
   "birth_date",
   "avatar",
   "bio",
-  "city",
   "country",
+  "city",
   "confirmation",
 ]);
 
@@ -35,7 +37,10 @@ export const users = pgTable(
     avatarFileId: text("avatar_file_id"),
     bio: text("bio"),
     city: text("city"),
+    cityOsmType: text("city_osm_type"),
+    cityOsmId: text("city_osm_id"),
     country: text("country"),
+    countryCode: text("country_code"),
     status: accountStatusEnum("status").notNull().default("pending"),
     registeredAt: timestamp("registered_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -103,7 +108,11 @@ export const registrationDrafts = pgTable(
     avatarFileId: text("avatar_file_id"),
     bio: text("bio"),
     city: text("city"),
+    cityOsmType: text("city_osm_type"),
+    cityOsmId: text("city_osm_id"),
     country: text("country"),
+    countryCode: text("country_code"),
+    locationCandidates: jsonb("location_candidates").$type<GeographicCandidate[] | null>(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

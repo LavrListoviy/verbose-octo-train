@@ -8,6 +8,7 @@ const databaseEnvSchema = z.object({
 });
 
 const operationalEnvSchema = databaseEnvSchema.extend({
+  NOMINATIM_BASE_URL: z.string().url().default("https://nominatim.openstreetmap.org/"),
   LOG_LEVEL: z.enum(["trace", "debug", "info", "warn", "error", "fatal"]).default("info"),
   LOG_PRETTY: z
     .enum(["true", "false"])
