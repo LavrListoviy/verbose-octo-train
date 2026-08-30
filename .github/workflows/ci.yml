@@ -1,9 +1,7 @@
 name: CI
 
 on:
-  push:
   pull_request:
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -65,41 +63,3 @@ jobs:
 
       - name: Run integration tests
         run: npm run test:integration
-
-  deploy:
-    name: Deploy to VPS
-    needs: [unit, integration]
-    if: >-
-      github.ref == 'refs/heads/main' &&
-      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - name: Configure deployment SSH key
-        env:
-          VPS_DEPLOY_KEY: ${{ secrets.VPS_DEPLOY_KEY }}
-        run: |
-          test -n "$VPS_DEPLOY_KEY" || {
-            echo "Repository secret VPS_DEPLOY_KEY is not configured." >&2
-            exit 1
-          }
-          install -d -m 700 "$HOME/.ssh"
-          printf '%s\n' "$VPS_DEPLOY_KEY" > "$HOME/.ssh/id_ed25519"
-          chmod 600 "$HOME/.ssh/id_ed25519"
-          cat > "$HOME/.ssh/known_hosts" <<'EOF'
-          89.218.15.195 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPQWZ/47fbVRQDUuPZzDP94+2cV2pYYZd9gB4wqtF094
-          EOF
-          chmod 600 "$HOME/.ssh/known_hosts"
-
-      - name: Update application
-        run: |
-          ssh -o BatchMode=yes -o StrictHostKeyChecking=yes codex@89.218.15.195 <<'EOF'
-          set -eu
-          cd /opt/telegram-account-bot
-          git fetch --prune origin main
-          git checkout --quiet main
-          git reset --hard origin/main
-          docker compose up -d --build --remove-orphans
-          docker image prune --force
-          EOF

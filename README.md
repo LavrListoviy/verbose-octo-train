@@ -85,7 +85,7 @@ wsl --distribution Ubuntu-24.04 --user root --cd /mnt/c/path/to/project -- docke
 
 ## Production-деплой на VPS
 
-GitHub Actions автоматически развёртывает `main` на VPS после успешных unit- и integration-тестов. Ручной запуск workflow также доступен только для `main`.
+GitHub Actions запускает unit- и integration-тесты только для pull request. Push в `main` запускает отдельный workflow деплоя на VPS; ручной запуск deployment workflow также доступен только для `main`.
 
 На сервере приложение находится в `/opt/telegram-account-bot`; `.env` хранится только на сервере и не перезаписывается деплоем. PostgreSQL не публикует порт на хост, поэтому доступен только контейнеру бота.
 
